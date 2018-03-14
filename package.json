@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "hap-nodejs": "^0.4.41",
+    "node-fetch": "^2.1.1",
     "node-persist": "^2.1.0",
     "yalm": "^4.1.0"
   }

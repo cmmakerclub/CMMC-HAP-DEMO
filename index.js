@@ -5,6 +5,7 @@ const pkgHap = require('./node_modules/hap-nodejs/package.json')
 const accessoryLoader = require('./node_modules/hap-nodejs/lib/AccessoryLoader')
 const pkg = require('./package.json')
 const log = require('yalm')
+const fetch = require('node-fetch')
 
 /*
  * Config Section
@@ -12,6 +13,8 @@ const log = require('yalm')
 
 const bridgeName = 'Nat Siri Bridge'
 const accessoriesDir = path.join(__dirname, 'accessories')
+
+
 
 log.setLevel('verbose')
 log(pkg.name + ' ' + pkg.version + ' is starting')
