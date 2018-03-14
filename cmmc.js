@@ -1,4 +1,5 @@
-var storage = require('node-persist');
+var fs = require('fs');
+var path = require('path');
 const HAP = require('hap-nodejs');
 const pkgHap = require('./node_modules/hap-nodejs/package.json');
 var accessoryLoader = require('./node_modules/hap-nodejs/lib/AccessoryLoader');
@@ -10,10 +11,18 @@ log(pkg.name + ' ' + pkg.version + ' starting');
 log.info('using hap-nodejs version', pkgHap.version);
 
 const {uuid, Bridge, Accessory, Service, Characteristic} = HAP;
-const bridgeName = 'Nat Bridge'
+const bridgeName = 'Nat Siri Bridge'
 
-HAP.init('configDir')
+HAP.init()
 var bridge = new Bridge(bridgeName, uuid.generate(bridgeName));
+
+// Load up all accessories in the /accessories folder
+var dir = path.join(__dirname, "accessories");
+var accessories = accessoryLoader.loadDirectory(dir);
+// Add them all to the bridge
+accessories.forEach(function(accessory) {
+    bridge.addBridgedAccessory(accessory);
+});
 
 // Listen for bridge identification event
 bridge.on('identify', function(paired, callback) {
@@ -28,3 +37,4 @@ bridge.publish({
     pincode: "031-45-154",
     category: Accessory.Categories.BRIDGE
 });
+
