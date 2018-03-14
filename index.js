@@ -11,6 +11,7 @@ const log = require('yalm')
  */
 
 const bridgeName = 'Nat Siri Bridge'
+const accessoriesDir = path.join(__dirname, 'accessories')
 
 log.setLevel('verbose')
 log(pkg.name + ' ' + pkg.version + ' is starting')
@@ -19,7 +20,7 @@ log.info(`using ${pkgHap.name} version ${pkgHap.version}`)
 HAP.init()
 
 const bridge = new Bridge(bridgeName, uuid.generate(bridgeName))
-const accessories = accessoryLoader.loadDirectory(path.join(__dirname, 'accessories'))
+const accessories = accessoryLoader.loadDirectory(accessoriesDir)
 accessories.forEach(accessory => bridge.addBridgedAccessory(accessory))
 
 bridge.on('identify', (paired, callback) => {
