@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "hap-nodejs": "^0.4.41",
+    "hap-nodejs": "^0.4.47",
     "node-fetch": "^2.1.1",
-    "node-persist": "^2.1.0",
+    "node-persist": "^3.0.1",
     "yalm": "^4.1.0"
   }
 }
