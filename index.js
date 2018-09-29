@@ -13,12 +13,15 @@ const accessoryLoader = require(__dirname + '/node_modules/hap-nodejs/lib/Access
 
 let ACCESSORIES_PATH = configStore.get('ACCESSORIES_PATH');
 
+let bridgeName = 'Default Siri Bridge';
 let username = 'C1:22:3D:E3:CE:F6';
 let pincode = '031-45-154';
 
 /*
  * Config Section
  */
+
+log.setLevel('verbose');
 
 program.name(pkg.name).
     usage('[options]').
@@ -32,48 +35,49 @@ if (program.init) {
   const accessoriesPath = `${process.cwd()}`;
   configStore.set('ACCESSORIES_PATH', accessoriesPath);
   ACCESSORIES_PATH = accessoriesPath;
+  log.info(`ACCESSORIES_PATH has been set to ${ACCESSORIES_PATH}`);
+}
+else {
+  if (!ACCESSORIES_PATH) {
+    log.error(`cmmc-hapjs --init must be called first.`);
+    process.exit(1);
+  }
+
+  if (program.bridgeName) {
+    bridgeName = program.args.join(' ');
+  }
+
+  if (!fs.existsSync(ACCESSORIES_PATH)) {
+    log.error(`${ACCESSORIES_PATH} not found.`);
+    process.exit(1);
+  }
+  startBridge();
 }
 
-if (!ACCESSORIES_PATH) {
-  log.error(`cmmc-hapjs --init must be called first.`);
-  process.exit(1);
-}
+function startBridge() {
+  const accessoriesDir = ACCESSORIES_PATH;
 
-let bridgeName = 'Default Siri Bridge';
-if (program.bridgeName) {
-  bridgeName = program.args.join(' ');
-}
+  HAP.init(ACCESSORIES_PATH + '/persist');
 
-if (!fs.existsSync(ACCESSORIES_PATH)) {
-  log.error(`${ACCESSORIES_PATH} not found.`);
-  process.exit(1);
-}
+  log(`${pkg.name} ${pkg.version} is starting.`);
+  log(`bridgeName=${bridgeName}, pinCode=${pincode}, username=${username}`);
+  log.info(`using ${pkgHap.name} version ${pkgHap.version}`);
 
-console.log(bridgeName);
-const accessoriesDir = ACCESSORIES_PATH;
+  const bridge = new Bridge(bridgeName, uuid.generate(bridgeName));
+  const accessories = accessoryLoader.loadDirectory(accessoriesDir);
+  accessories.forEach(accessory => bridge.addBridgedAccessory(accessory));
 
-log.setLevel('verbose');
-log(`${pkg.name} ${pkg.version} is starting.`);
-log(`bridgeName=${bridgeName}, pinCode=${pincode}, username=${username}`);
-log.info(`using ${pkgHap.name} version ${pkgHap.version}`);
-
-HAP.init(ACCESSORIES_PATH + '/persist');
-const bridge = new Bridge(bridgeName, uuid.generate(bridgeName));
-const accessories = accessoryLoader.loadDirectory(accessoriesDir);
-accessories.forEach(accessory => bridge.addBridgedAccessory(accessory));
-
-
-
-bridge.on('identify', (paired, callback) => {
-  console.log(`[${bridgeName} Node Bridge identify`);
-  callback(); // success
-});
+  bridge.on('identify', (paired, callback) => {
+    console.log(`[${bridgeName} Node Bridge identify`);
+    callback(); // success
+  });
 
 // Publish the Bridge on the local network.
-bridge.publish({
-  username: username,
-  port: 51826,
-  pincode: pincode,
-  category: Accessory.Categories.BRIDGE,
-});
+  bridge.publish({
+    username: username,
+    port: 51826,
+    pincode: pincode,
+    category: Accessory.Categories.BRIDGE,
+  });
 
+}
