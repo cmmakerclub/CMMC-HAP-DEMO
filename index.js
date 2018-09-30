@@ -38,7 +38,7 @@ if (program.init) {
 }
 else {
   if (!ACCESSORIES_PATH) {
-    log.error(`cmmc-hapjs --init must be called first.`);
+    log.error(`you must call cmmc-hapjs --init first`);
     process.exit(1);
   }
 
@@ -55,16 +55,18 @@ else {
 
 function startBridge() {
   const accessoriesDir = ACCESSORIES_PATH;
-
   HAP.init(ACCESSORIES_PATH + '/persist');
 
-  log(`${pkg.name} ${pkg.version} is starting.`);
-  log(`bridgeName=${bridgeName}, pinCode=${pincode}, username=${username}`);
-  log.info(`using ${pkgHap.name} version ${pkgHap.version}`);
+  log(`${pkg.name} v${pkg.version} is starting (${pkgHap.name} v${pkgHap.version})`);
+  log(`bridgeName=${bridgeName}`);
+  log(`pinCode=${pincode}, username=${username}`);
 
   const bridge = new Bridge(bridgeName, uuid.generate(bridgeName));
   const accessories = Helpers.loadDirectory(accessoriesDir);
-  accessories.forEach(accessory => bridge.addBridgedAccessory(accessory));
+  accessories.forEach(accessory => {
+    log.info(`> ${accessory.displayName} has been loaded`);
+    bridge.addBridgedAccessory(accessory);
+  });
 
   bridge.on('identify', (paired, callback) => {
     console.log(`[${bridgeName} Node Bridge identify`);
