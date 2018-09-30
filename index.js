@@ -59,13 +59,10 @@ log.info(`using ${pkgHap.name} version ${pkgHap.version}`);
 
 HAP.init(ACCESSORIES_PATH + '/persist');
 const bridge = new Bridge(bridgeName, uuid.generate(bridgeName));
-try {
-  const accessories = accessoryLoader.loadDirectory(accessoriesDir);
-  accessories.forEach(accessory => bridge.addBridgedAccessory(accessory));
-}
-catch (e) {
-  // console.log(e);
-}
+const accessories = accessoryLoader.loadDirectory(accessoriesDir);
+accessories.forEach(accessory => bridge.addBridgedAccessory(accessory));
+
+
 
 bridge.on('identify', (paired, callback) => {
   console.log(`[${bridgeName} Node Bridge identify`);
