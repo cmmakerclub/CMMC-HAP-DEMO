@@ -9,6 +9,11 @@
  $ nvm alias default 8
 ```
 
+## Installation
+
+```
+$ curl https://raw.githubusercontent.com/cmmakerclub/CMMC-HAP-DEMO/master/scripts/demo.sh | bash
+```
 
 ## Homekit Accessories Demo
 ```
