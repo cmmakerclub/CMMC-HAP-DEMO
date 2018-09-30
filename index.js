@@ -1,15 +1,14 @@
-const path = require('path');
 const HAP = require('hap-nodejs');
+const Helpers = require('./Helpers');
+const configStore = require('./Configstore');
+
 const {uuid, Bridge, Accessory} = HAP;
 const pkg = require('./package.json');
-const log = require('yalm');
-const fetch = require('node-fetch');
 const program = require('commander');
-const configStore = require('./Configstore');
-const fs = require('fs');
-
 const pkgHap = require(__dirname + '/node_modules/hap-nodejs/package.json');
-const accessoryLoader = require(__dirname + '/node_modules/hap-nodejs/lib/AccessoryLoader');
+
+const fs = require('fs');
+const log = require('yalm');
 
 let ACCESSORIES_PATH = configStore.get('ACCESSORIES_PATH');
 
@@ -64,7 +63,7 @@ function startBridge() {
   log.info(`using ${pkgHap.name} version ${pkgHap.version}`);
 
   const bridge = new Bridge(bridgeName, uuid.generate(bridgeName));
-  const accessories = accessoryLoader.loadDirectory(accessoriesDir);
+  const accessories = Helpers.loadDirectory(accessoriesDir);
   accessories.forEach(accessory => bridge.addBridgedAccessory(accessory));
 
   bridge.on('identify', (paired, callback) => {
