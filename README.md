@@ -24,6 +24,13 @@ $ curl https://raw.githubusercontent.com/cmmakerclub/CMMC-HAP-DEMO/master/script
  $ cmmc-hapjs
 ```
 
+## Customization
+```
+ $ cmmc-hjapjs -h
+ $ cmmc-hapjs --bridgeName NatBridge
+ 
+```
+
 ## Development
 ```
   $ cd ~
