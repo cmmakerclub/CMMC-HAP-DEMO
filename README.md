@@ -28,8 +28,11 @@ $ curl https://raw.githubusercontent.com/cmmakerclub/CMMC-HAP-DEMO/master/script
 ```
  $ cmmc-hjapjs -h
  $ cmmc-hapjs --bridgeName NatBridge
- 
 ```
+
+## HomeKit Accessories Templates
+
+[https://github.com/KhaosT/HAP-NodeJS/tree/master/accessories](https://github.com/KhaosT/HAP-NodeJS/tree/master/accessories)
 
 ## Development
 ```
